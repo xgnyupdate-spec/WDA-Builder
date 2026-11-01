@@ -36,6 +36,6 @@ jobs:
         with:
           name: WDA-Unsigned-Build
           path: |
-            ${{ runner.temp }}/WDA-DerivedData/Build/Products/Debug-iphoneos/WebDriverAgentRunner-Runner.app
+            ${{ runner.temp }}/WDA-DerivedData/Build/Products/Debug-iphoneos/
           if-no-files-found: error
           retention-days: 3
