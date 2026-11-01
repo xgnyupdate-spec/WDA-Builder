@@ -1,0 +1,41 @@
+
+name: Build WebDriverAgent
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout WDA source
+        uses: actions/checkout@v4
+        with:
+          repository: appium/WebDriverAgent
+          path: WebDriverAgent
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build WebDriverAgent
+        run: |
+          xcodebuild \
+            -project WebDriverAgent/WebDriverAgent.xcodeproj \
+            -scheme WebDriverAgentRunner \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/WDA-DerivedData" \
+            CODE_SIGNING_ALLOWED=NO \
+            build-for-testing
+
+      - name: Upload WDA build
+        uses: actions/upload-artifact@v4
+        with:
+          name: WDA-Unsigned-Build
+          path: |
+            ${{ runner.temp }}/WDA-DerivedData/Build/Products/Debug-iphoneos/WebDriverAgentRunner-Runner.app
+          if-no-files-found: error
+          retention-days: 3
